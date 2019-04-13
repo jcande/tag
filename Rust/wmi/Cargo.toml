@@ -1,0 +1,9 @@
+[package]
+name = "wmi"
+version = "0.0.1"
+authors = ["Jared S. Candelaria <jsc+tag@demigods.org>"]
+
+[dependencies]
+failure = "0.1.2"
+getopts = "0.2"
+wmach = { path = "../wmach" }

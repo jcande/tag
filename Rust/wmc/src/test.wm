@@ -1,0 +1,6 @@
+last:
+jmp last /* test */
+new:
++
+other:
+

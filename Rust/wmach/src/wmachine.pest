@@ -1,0 +1,70 @@
+alpha = _{ 'a'..'z' | 'A'..'Z' }
+digit = _{ '0'..'9' }
+misc = _{ "'" | "_" }
+colon = _{ ":" }
+
+whitespace = _{ " " }
+comment = _{ "/*" ~ (!"*/" ~ any)* ~ "*/" }
+newline = _{ "\n" }
+newlines = _{ newline* }
+newlines1 = _{ newline+ }
+
+//
+// We don't require the first character to be alpha
+//
+id = { (alpha | digit | misc)+ }
+
+
+
+label_id = @{ id }
+label = {
+    label_id ~ ":"
+}
+
+//
+// Jump around
+//
+fallthrough = {
+    // XXX should probably be [^label_id]
+    newline
+}
+else_branch = {
+    "," ~ label_id
+}
+jmp_prefix = _{
+    "jmp"
+}
+jmp = {
+    jmp_prefix ~ label_id ~ (fallthrough | else_branch)
+}
+
+//
+// Move the head forwards or backwards
+//
+seekR   = { ">" }
+seekL   = { "<" }
+
+//
+// Write a 1 or 0 to the tape
+//
+set         = { "+" }
+unset       = { "-" }
+
+//
+// IO
+//
+input       = { "," }
+output      = { "." }
+
+//
+// Debugging
+//
+debug = { "!" }
+
+command = {
+    (jmp | seekR | seekL | set | unset | input | output | debug)
+}
+
+source = {
+    (command | label | comment | newline)*
+}

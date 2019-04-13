@@ -1,0 +1,812 @@
+desc: (none)
+cmd: ./target/debug/wmi -f ../../others/elvm/assembled.wm
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=397794
+mem_heap_B=552
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=401470
+mem_heap_B=1696
+mem_heap_extra_B=40
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=424726
+mem_heap_B=1816
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=524675
+mem_heap_B=1816
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=peak
+n4: 1816 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 1024 0x56F418A: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 1024 0x5704377: _IO_doallocbuf (genops.c:365)
+   n1: 1024 0x5703252: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:495)
+    n1: 1024 0x56F5D46: getdelim (iogetdelim.c:73)
+     n1: 1024 0x5248661: pthread_getattr_np (pthread_getattr_np.c:118)
+      n1: 1024 0x1D317A: std::sys::unix::thread::guard::init (thread.rs:277)
+       n1: 1024 0x1D1584: std::rt::lang_start_internal (rt.rs:43)
+        n1: 1024 0x11CDC7: std::rt::lang_start (rt.rs:74)
+         n0: 1024 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 552 0x56F4E48: fopen@@GLIBC_2.2.5 (iofopen.c:65)
+  n1: 552 0x52485B1: pthread_getattr_np (pthread_getattr_np.c:81)
+   n1: 552 0x1D317A: std::sys::unix::thread::guard::init (thread.rs:277)
+    n1: 552 0x1D1584: std::rt::lang_start_internal (rt.rs:43)
+     n1: 552 0x11CDC7: std::rt::lang_start (rt.rs:74)
+      n0: 552 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 240 0x56F5BE6: getdelim (iogetdelim.c:102)
+  n1: 240 0x5248661: pthread_getattr_np (pthread_getattr_np.c:118)
+   n1: 240 0x1D317A: std::sys::unix::thread::guard::init (thread.rs:277)
+    n1: 240 0x1D1584: std::rt::lang_start_internal (rt.rs:43)
+     n1: 240 0x11CDC7: std::rt::lang_start (rt.rs:74)
+      n0: 240 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=5
+#-----------
+time=526407
+mem_heap_B=552
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=529712
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=531439
+mem_heap_B=205
+mem_heap_extra_B=59
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=534723
+mem_heap_B=399
+mem_heap_extra_B=145
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=537086
+mem_heap_B=328
+mem_heap_extra_B=152
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=539567
+mem_heap_B=332
+mem_heap_extra_B=188
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=543057
+mem_heap_B=460
+mem_heap_extra_B=220
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=545481
+mem_heap_B=465
+mem_heap_extra_B=263
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=547963
+mem_heap_B=485
+mem_heap_extra_B=283
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=550201
+mem_heap_B=589
+mem_heap_extra_B=275
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=554079
+mem_heap_B=718
+mem_heap_extra_B=306
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=557220
+mem_heap_B=785
+mem_heap_extra_B=311
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=558977
+mem_heap_B=833
+mem_heap_extra_B=319
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=561633
+mem_heap_B=835
+mem_heap_extra_B=341
+mem_stacks_B=0
+heap_tree=detailed
+n9: 835 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 208 0x1975CB: alloc::alloc::realloc (alloc.rs:118)
+  n1: 208 0x197394: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 208 0x18EC1C: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 208 0x190720: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 208 0x191750: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 208 0x191462: <alloc::vec::Vec<T>>::push (vec.rs:999)
+       n1: 208 0x186CEE: getopts::Options::optflag (lib.rs:184)
+        n1: 208 0x11B688: wmi::main (main.rs:468)
+         n1: 208 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+          n1: 208 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+           n1: 208 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+            n1: 208 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+             n1: 208 0x11CDC7: std::rt::lang_start (rt.rs:74)
+              n0: 208 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n2: 192 0x1974FA: alloc::alloc::alloc (alloc.rs:82)
+  n3: 128 0x1972E0: <alloc::alloc::Global as core::alloc::Alloc>::alloc (alloc.rs:158)
+   n1: 72 0x18CEA0: <alloc::raw_vec::RawVec<T, A>>::allocate_in (raw_vec.rs:106)
+    n1: 72 0x18CB84: <alloc::raw_vec::RawVec<T>>::with_capacity (raw_vec.rs:150)
+     n1: 72 0x190CE2: <alloc::vec::Vec<T>>::with_capacity (vec.rs:368)
+      n1: 72 0x1253F6: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::from_iter (vec.rs:1792)
+       n1: 72 0x1257B3: <alloc::vec::Vec<T> as core::iter::traits::FromIterator<T>>::from_iter (vec.rs:1700)
+        n1: 72 0x11C846: core::iter::iterator::Iterator::collect (iterator.rs:1477)
+         n1: 72 0x11B5C9: wmi::main (main.rs:465)
+          n1: 72 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+           n1: 72 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+            n1: 72 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+             n1: 72 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+              n1: 72 0x11CDC7: std::rt::lang_start (rt.rs:74)
+               n0: 72 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+   n1: 56 0x18D160: <alloc::raw_vec::RawVec<T, A>>::allocate_in (raw_vec.rs:106)
+    n1: 56 0x18CB24: <alloc::raw_vec::RawVec<T>>::with_capacity (raw_vec.rs:150)
+     n1: 56 0x190C22: <alloc::vec::Vec<T>>::with_capacity (vec.rs:368)
+      n1: 56 0x18937F: alloc::slice::hack::to_vec (slice.rs:169)
+       n1: 56 0x197823: alloc::slice::<impl [T]>::to_vec (slice.rs:387)
+        n2: 56 0x197853: alloc::slice::<impl alloc::borrow::ToOwned for [T]>::to_owned (slice.rs:645)
+         n1: 54 0x193D48: alloc::str::<impl alloc::borrow::ToOwned for str>::to_owned (str.rs:208)
+          n1: 54 0x18A572: <alloc::string::String as core::convert::From<&'a str>>::from (string.rs:2211)
+           n3: 54 0x189D02: <str as alloc::string::ToString>::to_string (string.rs:2171)
+            n1: 24 0x186E4E: getopts::Options::optopt (lib.rs:272)
+             n1: 24 0x11B631: wmi::main (main.rs:467)
+              n1: 24 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+               n1: 24 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+                n1: 24 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                 n1: 24 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                  n1: 24 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                   n0: 24 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+            n1: 20 0x186BF5: getopts::Options::optflag (lib.rs:188)
+             n1: 20 0x11B688: wmi::main (main.rs:468)
+              n1: 20 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+               n1: 20 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+                n1: 20 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                 n1: 20 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                  n1: 20 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                   n0: 20 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+            n0: 10 in 4 places, all below massif's threshold (1.00%)
+         n0: 2 in 1 place, below massif's threshold (1.00%)
+   n0: 0 in 1 place, below massif's threshold (1.00%)
+  n1: 64 0x197468: alloc::alloc::exchange_malloc (alloc.rs:192)
+   n1: 64 0x1874DC: getopts::OptGroup::long_to_short (lib.rs:728)
+    n1: 64 0x12C1CE: getopts::Options::parse::{{closure}} (lib.rs:311)
+     n1: 64 0x1273BF: <core::iter::Map<I, F> as core::iter::iterator::Iterator>::fold::{{closure}} (mod.rs:1347)
+      n1: 64 0x128D69: <core::slice::Iter<'a, T> as core::iter::iterator::Iterator>::fold (mod.rs:2921)
+       n1: 64 0x127288: <core::iter::Map<I, F> as core::iter::iterator::Iterator>::fold (mod.rs:1347)
+        n1: 64 0x126D5A: core::iter::iterator::Iterator::for_each (iterator.rs:615)
+         n1: 64 0x1249A5: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::spec_extend (vec.rs:1831)
+          n1: 64 0x12520B: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::from_iter (vec.rs:1814)
+           n1: 64 0x1256F9: <alloc::vec::Vec<T> as core::iter::traits::FromIterator<T>>::from_iter (vec.rs:1700)
+            n1: 64 0x126CC2: core::iter::iterator::Iterator::collect (iterator.rs:1477)
+             n1: 64 0x1297DC: getopts::Options::parse (lib.rs:311)
+              n1: 64 0x11B6EA: wmi::main (main.rs:470)
+               n1: 64 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+                n1: 64 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+                 n1: 64 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                  n1: 64 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                   n1: 64 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                    n0: 64 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 176 0x12871A: alloc::alloc::alloc (alloc.rs:82)
+  n2: 176 0x128550: <alloc::alloc::Global as core::alloc::Alloc>::alloc (alloc.rs:158)
+   n1: 128 0x11F857: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:679)
+    n1: 128 0x12110F: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 128 0x122E9F: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 128 0x1248AF: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::spec_extend (vec.rs:1827)
+       n1: 128 0x12520B: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::from_iter (vec.rs:1814)
+        n1: 128 0x1256F9: <alloc::vec::Vec<T> as core::iter::traits::FromIterator<T>>::from_iter (vec.rs:1700)
+         n1: 128 0x126CC2: core::iter::iterator::Iterator::collect (iterator.rs:1477)
+          n1: 128 0x1297DC: getopts::Options::parse (lib.rs:311)
+           n1: 128 0x11B6EA: wmi::main (main.rs:470)
+            n1: 128 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+             n1: 128 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+              n1: 128 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+               n1: 128 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                n1: 128 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                 n0: 128 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+   n1: 48 0x120722: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:679)
+    n1: 48 0x1211DF: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 48 0x122F1F: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 48 0x124B1F: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::spec_extend (vec.rs:1827)
+       n1: 48 0x125147: <alloc::vec::Vec<T> as alloc::vec::SpecExtend<T, I>>::from_iter (vec.rs:1814)
+        n1: 48 0x125699: <alloc::vec::Vec<T> as core::iter::traits::FromIterator<T>>::from_iter (vec.rs:1700)
+         n1: 48 0x126C92: core::iter::iterator::Iterator::collect (iterator.rs:1477)
+          n1: 48 0x12985D: getopts::Options::parse (lib.rs:313)
+           n1: 48 0x11B6EA: wmi::main (main.rs:470)
+            n1: 48 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+             n1: 48 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+              n1: 48 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+               n1: 48 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                n1: 48 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                 n0: 48 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 80 0x1C5E1F: std::thread::Thread::new (alloc.rs:82)
+  n1: 80 0x1D16BB: std::rt::lang_start_internal (rt.rs:50)
+   n1: 80 0x11CDC7: std::rt::lang_start (rt.rs:74)
+    n0: 80 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 50 0x1C6657: std::env::args_os (alloc.rs:82)
+  n1: 50 0x1C651F: std::env::args (env.rs:715)
+   n1: 50 0x11B5A3: wmi::main (main.rs:465)
+    n1: 50 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+     n1: 50 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+      n1: 50 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+       n1: 50 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+        n1: 50 0x11CDC7: std::rt::lang_start (rt.rs:74)
+         n0: 50 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 48 0x1C5DD1: std::thread::Thread::new (alloc.rs:82)
+  n1: 48 0x1D16BB: std::rt::lang_start_internal (rt.rs:50)
+   n1: 48 0x11CDC7: std::rt::lang_start (rt.rs:74)
+    n0: 48 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 40 0x1C5D54: std::thread::Thread::new (alloc.rs:82)
+  n1: 40 0x1D16BB: std::rt::lang_start_internal (rt.rs:50)
+   n1: 40 0x11CDC7: std::rt::lang_start (rt.rs:74)
+    n0: 40 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n1: 32 0x56B97C0: __cxa_thread_atexit_impl (cxa_thread_atexit_impl.c:106)
+  n1: 32 0x1CF3CA: std::sys_common::thread_info::set (fast_thread_local.rs:39)
+   n1: 32 0x1D16E3: std::rt::lang_start_internal (rt.rs:51)
+    n1: 32 0x11CDC7: std::rt::lang_start (rt.rs:74)
+     n0: 32 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 9 in 9 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=19
+#-----------
+time=564630
+mem_heap_B=889
+mem_heap_extra_B=367
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=567182
+mem_heap_B=913
+mem_heap_extra_B=359
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=572690
+mem_heap_B=945
+mem_heap_extra_B=367
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=576545
+mem_heap_B=969
+mem_heap_extra_B=383
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=579908
+mem_heap_B=887
+mem_heap_extra_B=345
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=585277
+mem_heap_B=919
+mem_heap_extra_B=353
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=587937
+mem_heap_B=1087
+mem_heap_extra_B=465
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=590744
+mem_heap_B=1093
+mem_heap_extra_B=459
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=594221
+mem_heap_B=1157
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=598547
+mem_heap_B=1349
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=602873
+mem_heap_B=2117
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=607199
+mem_heap_B=5189
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=611525
+mem_heap_B=17477
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=615851
+mem_heap_B=66629
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=620177
+mem_heap_B=263237
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=624503
+mem_heap_B=1049669
+mem_heap_extra_B=467
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=628829
+mem_heap_B=4195397
+mem_heap_extra_B=4499
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=630992
+mem_heap_B=8389701
+mem_heap_extra_B=4499
+mem_stacks_B=0
+heap_tree=detailed
+n2: 8389701 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 8388608 0x1A885B: alloc::alloc::realloc (alloc.rs:118)
+  n1: 8388608 0x1A85D4: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 8388608 0x19D3DC: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 8388608 0x19DD50: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 8388608 0x1A5E60: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 8388608 0x179DF2: std::io::read_to_end_with_reservation (mod.rs:376)
+       n1: 8388608 0x179A08: std::io::read_to_end (mod.rs:363)
+        n1: 8388608 0x17A296: std::io::Read::read_to_string::{{closure}} (mod.rs:661)
+         n1: 8388608 0x179ADA: std::io::append_to_string (mod.rs:340)
+          n1: 8388608 0x16E9BE: std::io::Read::read_to_string (mod.rs:661)
+           n1: 8388608 0x13FC3B: wmach::Program::from_file (lib.rs:300)
+            n1: 8388608 0x11BC7B: wmi::main (main.rs:480)
+             n1: 8388608 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+              n1: 8388608 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+               n1: 8388608 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                n1: 8388608 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                 n1: 8388608 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                  n0: 8388608 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 1093 in 25 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=37
+#-----------
+time=633155
+mem_heap_B=16778309
+mem_heap_extra_B=4499
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=635318
+mem_heap_B=33555525
+mem_heap_extra_B=4499
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=12243856
+mem_heap_B=33555549
+mem_heap_extra_B=4515
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=12247831
+mem_heap_B=33555621
+mem_heap_extra_B=4507
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=12251224
+mem_heap_B=33555622
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=12255772
+mem_heap_B=33555718
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=12266471
+mem_heap_B=33555910
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=12286496
+mem_heap_B=33556294
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=12325087
+mem_heap_B=33557062
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=detailed
+n2: 33557062 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 33554432 0x1A885B: alloc::alloc::realloc (alloc.rs:118)
+  n1: 33554432 0x1A85D4: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 33554432 0x19D3DC: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 33554432 0x19DD50: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 33554432 0x1A5E60: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 33554432 0x179DF2: std::io::read_to_end_with_reservation (mod.rs:376)
+       n1: 33554432 0x179A08: std::io::read_to_end (mod.rs:363)
+        n1: 33554432 0x17A296: std::io::Read::read_to_string::{{closure}} (mod.rs:661)
+         n1: 33554432 0x179ADA: std::io::append_to_string (mod.rs:340)
+          n1: 33554432 0x16E9BE: std::io::Read::read_to_string (mod.rs:661)
+           n1: 33554432 0x13FC3B: wmach::Program::from_file (lib.rs:300)
+            n1: 33554432 0x11BC7B: wmi::main (main.rs:480)
+             n1: 33554432 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+              n1: 33554432 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+               n1: 33554432 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                n1: 33554432 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                 n1: 33554432 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                  n0: 33554432 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 2630 in 27 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=46
+#-----------
+time=12400794
+mem_heap_B=33558598
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=12550733
+mem_heap_B=33561670
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=12849136
+mem_heap_B=33567814
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=13444467
+mem_heap_B=33580102
+mem_heap_extra_B=4546
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=13482437
+mem_heap_B=33580103
+mem_heap_extra_B=4545
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=13486360
+mem_heap_B=33580105
+mem_heap_extra_B=4543
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=14616906
+mem_heap_B=33580109
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=14831227
+mem_heap_B=33604685
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=18172273
+mem_heap_B=33653837
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=24303212
+mem_heap_B=33752141
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=detailed
+n2: 33752141 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 33554432 0x1A885B: alloc::alloc::realloc (alloc.rs:118)
+  n1: 33554432 0x1A85D4: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 33554432 0x19D3DC: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 33554432 0x19DD50: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 33554432 0x1A5E60: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 33554432 0x179DF2: std::io::read_to_end_with_reservation (mod.rs:376)
+       n1: 33554432 0x179A08: std::io::read_to_end (mod.rs:363)
+        n1: 33554432 0x17A296: std::io::Read::read_to_string::{{closure}} (mod.rs:661)
+         n1: 33554432 0x179ADA: std::io::append_to_string (mod.rs:340)
+          n1: 33554432 0x16E9BE: std::io::Read::read_to_string (mod.rs:661)
+           n1: 33554432 0x13FC3B: wmach::Program::from_file (lib.rs:300)
+            n1: 33554432 0x11BC7B: wmi::main (main.rs:480)
+             n1: 33554432 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+              n1: 33554432 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+               n1: 33554432 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                n1: 33554432 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                 n1: 33554432 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                  n0: 33554432 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 197709 in 27 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=56
+#-----------
+time=37012184
+mem_heap_B=33948749
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=62608095
+mem_heap_B=34341965
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=108530482
+mem_heap_B=35128397
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=217854361
+mem_heap_B=36701261
+mem_heap_extra_B=4539
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=430098204
+mem_heap_B=39846989
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=61
+#-----------
+time=784222645
+mem_heap_B=46138445
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=1450578140
+mem_heap_B=58721357
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=63
+#-----------
+time=2787476038
+mem_heap_B=83887181
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=5529106666
+mem_heap_B=134218829
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=11352700553
+mem_heap_B=234882125
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=detailed
+n3: 234882125 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 201326600 0x1507DB: alloc::alloc::realloc (alloc.rs:118)
+  n2: 201326600 0x1505A4: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 201326592 0x1468AC: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 201326592 0x1472F0: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 201326592 0x132350: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n2: 201326592 0x131CE9: <alloc::vec::Vec<T>>::push (vec.rs:999)
+       n1: 201326592 0x163971: <pest::parser_state::ParserState<'i, R>>::rule (parser_state.rs:166)
+        n2: 201326592 0x1414E5: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::command (lib.rs:73)
+         n1: 201326592 0x14AF8B: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+          n1: 201326592 0x159BA0: <core::result::Result<T, E>>::and_then (result.rs:647)
+           n1: 201326592 0x14B046: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+            n1: 201326592 0x160A4B: pest::position::Position::sequence (position.rs:448)
+             n1: 201326592 0x14B0A3: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+              n1: 201326592 0x1699E9: <pest::parser_state::ParserState<'i, R>>::sequence (parser_state.rs:258)
+               n2: 201326592 0x14B0EE: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+                n1: 201326592 0x15F37A: pest::position::Position::repeat (position.rs:594)
+                 n1: 201326592 0x14B143: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+                  n1: 201326592 0x15B170: <core::result::Result<T, E>>::and_then (result.rs:647)
+                   n1: 201326592 0x14B20F: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+                    n1: 201326592 0x1602DC: pest::position::Position::optional (position.rs:555)
+                     n1: 201326592 0x14B263: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}}::{{closure}} (lib.rs:73)
+                      n1: 201326592 0x161B2B: pest::position::Position::sequence (position.rs:448)
+                       n1: 201326592 0x14B2B3: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}}::{{closure}} (lib.rs:73)
+                        n1: 201326592 0x16A3E9: <pest::parser_state::ParserState<'i, R>>::sequence (parser_state.rs:258)
+                         n1: 201326592 0x14B2F9: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source::{{closure}} (lib.rs:73)
+                          n1: 201326592 0x166A5B: <pest::parser_state::ParserState<'i, R>>::rule (parser_state.rs:144)
+                           n1: 201326592 0x141535: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::rules::source (lib.rs:73)
+                            n1: 201326592 0x14BD11: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse::{{closure}} (lib.rs:73)
+                             n1: 201326592 0x162EAE: pest::parser_state::state (parser_state.rs:75)
+                              n0: 201326592 0x140CD7: <wmach::WMachineParser as pest::parser::Parser<wmach::Rule>>::parse (lib.rs:73)
+                n0: 0 in 1 place, below massif's threshold (1.00%)
+         n0: 0 in 1 place, below massif's threshold (1.00%)
+       n0: 0 in 2 places, all below massif's threshold (1.00%)
+   n0: 8 in 1 place, below massif's threshold (1.00%)
+ n1: 33554432 0x1A885B: alloc::alloc::realloc (alloc.rs:118)
+  n1: 33554432 0x1A85D4: <alloc::alloc::Global as core::alloc::Alloc>::realloc (alloc.rs:173)
+   n1: 33554432 0x19D3DC: <alloc::raw_vec::RawVec<T, A>>::reserve_internal (raw_vec.rs:677)
+    n1: 33554432 0x19DD50: <alloc::raw_vec::RawVec<T, A>>::reserve (raw_vec.rs:502)
+     n1: 33554432 0x1A5E60: <alloc::vec::Vec<T>>::reserve (vec.rs:470)
+      n1: 33554432 0x179DF2: std::io::read_to_end_with_reservation (mod.rs:376)
+       n1: 33554432 0x179A08: std::io::read_to_end (mod.rs:363)
+        n1: 33554432 0x17A296: std::io::Read::read_to_string::{{closure}} (mod.rs:661)
+         n1: 33554432 0x179ADA: std::io::append_to_string (mod.rs:340)
+          n1: 33554432 0x16E9BE: std::io::Read::read_to_string (mod.rs:661)
+           n1: 33554432 0x13FC3B: wmach::Program::from_file (lib.rs:300)
+            n1: 33554432 0x11BC7B: wmi::main (main.rs:480)
+             n1: 33554432 0x11CDEE: std::rt::lang_start::{{closure}} (rt.rs:74)
+              n1: 33554432 0x1D0D71: std::panicking::try::do_call (rt.rs:59)
+               n1: 33554432 0x1DECC8: __rust_maybe_catch_panic (lib.rs:102)
+                n1: 33554432 0x1D1742: std::rt::lang_start_internal (panicking.rs:289)
+                 n1: 33554432 0x11CDC7: std::rt::lang_start (rt.rs:74)
+                  n0: 33554432 0x11C4E8: main (in /home/jsc/src/tag/rust/wmi/target/debug/wmi)
+ n0: 1093 in 26 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=66
+#-----------
+time=23006655904
+mem_heap_B=436208717
+mem_heap_extra_B=8571
+mem_stacks_B=0
+heap_tree=empty

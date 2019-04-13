@@ -1,0 +1,19 @@
+Name of the challenge: Quetzalcoatl's Onion
+
+
+Take your mind to another level http://www.frc.ri.cmu.edu/~hpm/project.archive/general.articles/1998/SimConEx.98.html
+
+
+
+
+
+
+Implement a simple stack based language in the second compiled language
+ - maybe forth?
+     dup  ( a -- a a )
+     drop ( a -- )
+     swap ( a b -- b a )
+     over ( a b -- a b a )
+     rot  ( a b c -- b c a )
+This will be buggy
+They'll print out data on the left side of the tape (using shellcode in the tag system) to exploit it

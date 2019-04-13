@@ -1,0 +1,8 @@
+[package]
+name = "assembler"
+version = "0.0.1"
+authors = ["Jared S. Candelaria <jsc+tag@demigods.org>"]
+
+[dependencies]
+failure = "0.1.2"
+tag = { path = "../tag" }

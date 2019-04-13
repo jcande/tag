@@ -1,0 +1,6 @@
+Here lies the (mostly) raw working directory for the tag toolchain project. To summarize the idea, a fully working toolchain including an emulator. Many techniques were tried out but eventually I gave up. If you're interesting in the tag system then perhaps something buried in here would be useful to you. Then again, maybe not.
+
+Other tools used:
+ * elvm - https://github.com/shinh/elvm
+ * TommyDS - https://www.tommyds.it/
+ * Probably others, email me if I forgot your work

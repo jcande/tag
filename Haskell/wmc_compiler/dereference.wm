@@ -1,0 +1,87 @@
+/* The first n-bits under the head are the address followed by 8-bits that will
+ * represent the dereferenced data once the operation completes, and two
+ * segments (0 and 1). Each pair of segments has an 'active' bit that marks
+ * which segment is in-use for the operation. This active bit is set during the
+ * address decode phase which consists of copying, in sequence, each bit of the
+ * address to the active bit. The highest segment (the last bit in the address)
+ * contains the selected data. By the time we have traversed this high, we (the
+ * programmer) now *know* which address we have located. This means that we
+ * have knowledge about where the head is located and can hard-code an 8-bit
+ * copy operation to the data location from the chosen address. Once this
+ * completes, we reset the head back to the original location. We have
+ * successfully dereferenced a byte of memory.
+ *
+ * [address] [data destination] { segment_selector,
+ *                                  { segment_selector_0,
+ *                                      [segment_..._0],
+ *                                      [segment_..._1]
+ *                                  },
+ *                                  { segment_selector_1,
+ *                                      [segment_..._0],
+ *                                      [segment_..._1]
+ *                                  }
+ *                              }
+ */
+
+/* Previous idea is fucked. It requires too much memory. But instead of
+ * encoding the results in memory, we can encode them directly in the code
+ * through branching. This will transfer the high memory usage into huge
+ * amounts of code but this should be ok as our tag system is just a series of
+ * key-value pairs in a hashtable so it should support billions of entries
+ * (maybe, who fucking knows). The idea is the same, however.
+ *
+ * Layout:
+ * [address (n-bits)] [data destination (8-bits)] [memory]
+ */
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> /* skip over the address to dereference (we live space for 32-bits but we don't have ot use them all */
+>>>>>>>> /* skip over the result location where the dereferenced data will be output */
+/* create memory for testing ("hello world!") and unwind */
+->->->->->+>+>->+>->->->->+>+>->->+>->+>->->+>+>->+>+>->->->+>+>->+>+>->->->->->+>+>->+>+>+>+>->->+>->->->->->->->+>+>+>->+>+>+>->+>+>->+>+>+>+>->->->->+>+>+>->->+>->->+>+>->+>+>->->->->+>+>->->+>->->->->+>->->->->+>->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->-><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<<<<<<< /* back to start of output */
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< /* back to beginning */
+
+ /* Choose an address. */
++   /* 1 */
+>-  /* 0 */
+>+  /* 1 */
+>-  /* 0 */
+<<<
+
+/* Now we need to decode the address (which means set the appropriate selectors) */
+
+/* check to see what we need to do for the msb */
+decode_31:
+jmp addr_1, addr_0
+
+addr_1:
+>
+jmp addr_11, addr_10
+
+    addr_11:
+    >
+    jmp addr_111, addr_110
+
+        addr_111:
+        >
+        jmp addr_1111, addr_1110
+
+            addr_1111:
+
+            addr_1110:
+
+        addr_110:
+        >
+        jmp addr_1101, addr_1100
+
+            addr_1101:
+
+            addr_1100:
+
+    addr_10:
+    >
+    jmp addr_101, addr_100
+
+addr_0:
+>
+jmp 0_set_30, 0_unset_30

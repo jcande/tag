@@ -1,0 +1,87 @@
+>
+# 1
+t.addRule("x", ["xa","xa", "xa","xa"])      # double the xs!
+t.addRule("0", ["net","_", "test"])
+t.addRule("1", ["xa","xa", "net","_", "test"])
+t.addRule("y", ["ya"])                      # divide by 2, this gives us a unary representation of the ys
+
+# 2
+t.addRule("xa", ["xb","xb"])
+t.addRule("net", ["odd_net","even_net"])    # cast the net! This let's us safely operate on blank (turing) tapes (no xs or ys)
+t.addRule("test", ["1b","0b"])           # We use this to know what value the new head will take
+t.addRule("ya", ["yb","yb"])                # keep the status quo for the ys. This will undergo some surgery implicitly from the various parity checks
+
+# 3
+t.addRule("xb", ["xc","xc"])
+t.addRule("0b", ["0c","0c"])              # even numbers lack a bit in the 1's place
+t.addRule("1b", ["1c","1c"])               # shift out the lower bit!
+t.addRule("odd_net", [])                    # keep that odd parity going
+t.addRule("even_net", ["pad"])              # swap the parity
+t.addRule("yb", ["yc", "yc"])
+
+# 4
+t.addRule("xc", ["x_new","x_new"])
+t.addRule("0c", ["0_new","0_new"])
+t.addRule("1c", ["1_new","1_new"])
+t.addRule("yc", ["y_new","y_new"])
+
+---
+
+<
+# 1
+t.addRule("x", ["xa","xa"])                 # status quo
+t.addRule("0", ["net","_", "test"])
+t.addRule("1", ["net","_", "test", "ya","ya"])
+t.addRule("y", ["ya","ya", "ya","ya"])      # double!
+
+# 2
+t.addRule("xa", ["xb"])                     # divide by 2
+t.addRule("net", ["odd_net","even_net"])    # cast the net! This let's us safely operate on blank (turing) tapes (no xs or ys)
+t.addRule("test", ["1b","0b"])           # We use this to know what value the new head will take
+t.addRule("ya", ["yb","yb"])
+
+# 3
+t.addRule("xb", ["xc","xc"])
+t.addRule("0b", ["0c","0c"])              # even numbers lack a bit in the 1's place
+t.addRule("1b", ["1c","1c"])               # shift out the lower bit!
+t.addRule("odd_net", [])                    # keep that odd parity going
+t.addRule("even_net", ["pad"])              # swap the parity
+t.addRule("yb", ["yc","yc"])
+
+# 4
+t.addRule("xc", ["x_new","x_new"])
+t.addRule("0c", ["0_new","0_new"])
+t.addRule("1c", ["1_new","1_new"])
+t.addRule("yc", ["y_new","y_new"])
+
+---
+
+jmp
+# 1
+t.addRule("x", ["xa","xa"])         # since x comes before the head, we maintain the status quo for a cycle so that we can be impacted by the parity flip
+t.addRule("0", ["net","_", "shift"])
+t.addRule("1", ["1a_t", "1a_t"])
+t.addRule("y", ["ya_t", "ya_f"])
+
+
+# 2
+t.addRule("xa", ["xb_t","xb_f"])    # ok, now we can participate in the parity flip
+
+t.addRule("1a_t", ["1b_t","1b_t"])
+t.addRule("ya_t", ["yb_t","yb_t"])
+
+
+t.addRule("ya_f", ["yb_f","yb_f"])
+t.addRule("net", ["pad"])
+t.addRule("shift", ["0b_f","0b_f"])
+t.addRule("xa_f", ["xb_f","xb_f"])
+
+
+# 3
+t.addRule("xb_t", ["x_t","x_t"])
+t.addRule("1b_t", ["1_t","1_t"])
+t.addRule("yb_t", ["y_t","y_t"])
+
+t.addRule("xb_f", ["x_f","x_f"])
+t.addRule("0b_f", ["0_f","0_f"])
+t.addRule("yb_f", ["y_f","y_f"])

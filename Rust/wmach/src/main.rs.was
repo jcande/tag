@@ -1,0 +1,720 @@
+use std::fs::File;
+use std::path::Path;
+use std::collections::HashMap;
+use std::str::FromStr;
+use std::io::Read;
+use std::fmt;
+
+// TODO make a Tag library so we can put all the tag stuff in there
+// TODO make a wmachine library for the same reasons
+// TODO make a usable main
+
+#[macro_use]
+extern crate failure_derive;
+extern crate failure;
+
+extern crate pest;
+use pest::Parser;
+
+#[macro_use]
+extern crate pest_derive;
+
+fn forge_symbol(pos: usize, name: &str) -> String {
+    let mut symbol = name.to_string();
+    symbol.push('_');
+    symbol.push_str(&pos.to_string());
+    symbol
+}
+
+
+#[derive(Debug, Fail)]
+pub enum WMError {
+    #[fail(display = "{}", message)]
+    GeneralError { message: String },
+
+    #[fail(display = "{}", rule)]
+    InvalidRule { rule: String },
+
+    #[fail(display = "{}", label)]
+    DuplicateLabel { label: String },
+
+    // this realy should be a LabelId but I don't want to pull it out of the Target
+    #[fail(display = "Unknown target {} referenced", target)]
+    UnknownTarget {
+        target: Target,
+    },
+
+    #[fail(display = "{}", message)]
+    IoError {
+        message: String,
+        backtrace: failure::Backtrace,
+        #[cause]
+        cause: std::io::Error,
+    },
+}
+
+impl From<std::io::Error> for WMError {
+    fn from(error: std::io::Error) -> WMError {
+        WMError::IoError {
+            // XXX what would make a good message?
+            message: "IO Error".to_string(),
+            backtrace: failure::Backtrace::new(),
+            cause: error,
+        }
+    }
+}
+
+const _GRAMMAR: &str = include_str!("wmachine.pest");
+#[derive(Parser, Debug)]
+#[grammar = "wmachine.pest"]
+struct WMachineParser;
+
+#[derive(Debug)]
+pub enum Insn {
+    Write(WriteOp),
+    Seek(SeekOp),
+    Io(IoOp),
+    Jmp(InsnOffset, InsnOffset),
+}
+
+#[derive(Debug)]
+pub enum WMStmt {
+    Write(WriteOp),
+    Seek(SeekOp),
+    Io(IoOp),
+    Label(LabelId),
+    Jmp(Target, Target),
+}
+
+#[derive(Debug, Clone)]
+pub enum WriteOp {
+    Set,
+    Unset,
+}
+
+#[derive(Debug, Clone)]
+pub enum SeekOp {
+    Left(usize),
+    Right(usize),
+}
+
+#[derive(Debug, Clone)]
+pub enum IoOp {
+    In,
+    Out,
+}
+
+
+pub type LabelId = String;
+pub type InsnOffset = usize;
+pub type LabelMap = HashMap<LabelId, InsnOffset>;
+#[derive(Debug, Clone)]
+pub enum Target {
+    NextAddress,
+    Name(LabelId),
+}
+
+impl fmt::Display for Target {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Target::NextAddress => write!(f, "<fallthrough>"),
+            Target::Name(label) => write!(f, "<{}>", label),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct WMProgram {
+    instructions: Vec<Insn>,
+    labels: LabelMap,
+}
+
+impl FromStr for WMProgram {
+    type Err = WMError;
+
+    fn from_str(unparsed: &str) -> Result<WMProgram, WMError> {
+        let mut program = WMachineParser::parse(Rule::source, &unparsed)
+                            .map_err(|e| WMError::GeneralError{ message: format!("Pest Error: {}", e) })?;
+
+        let program = program.next().ok_or(WMError::GeneralError{ message: "None".to_owned() })?;
+        if program.as_rule() != Rule::source {
+            Err(WMError::InvalidRule{ rule: program.as_str().to_owned() })?;
+        }
+
+        let mut statements = Vec::new();
+        for exp in program.into_inner() {
+            let stmt = match exp.as_rule() {
+                Rule::command => {
+                    let mut exp = exp.into_inner()
+                                    .next()
+                                    .ok_or(WMError::GeneralError{ message: "None".to_owned() })?;
+                    match exp.as_rule() {
+                        Rule::seekR => WMStmt::Seek(SeekOp::Right(1)),
+                        Rule::seekL => WMStmt::Seek(SeekOp::Left(1)),
+
+                        Rule::set => WMStmt::Write(WriteOp::Set),
+                        Rule::unset => WMStmt::Write(WriteOp::Unset),
+
+                        Rule::input => WMStmt::Io(IoOp::In),
+                        Rule::output => WMStmt::Io(IoOp::Out),
+
+                        Rule::jmp => {
+                            let mut inside = exp.into_inner();
+
+                            let true_label = inside.next()
+                                                .ok_or(WMError::GeneralError{ message: "None".to_owned() })?
+                                                .as_str()
+                                                .to_owned();
+                            let alternative = inside.next()
+                                                .ok_or(WMError::GeneralError{ message: "None".to_owned() })?;
+                            let false_target = match alternative.as_rule() {
+                                Rule::fallthrough => Target::NextAddress,
+                                Rule::else_branch => {
+                                    let label = alternative.into_inner()
+                                                    .next()
+                                                    .ok_or(WMError::GeneralError{ message: "None".to_owned() })?
+                                                    .as_str()
+                                                    .to_owned();
+                                    Target::Name(label)
+                                },
+                                _ => panic!("Unhandled: {:?}", alternative.as_rule()),
+                            };
+
+                            WMStmt::Jmp(Target::Name(true_label), false_target)
+                        },
+
+                        _ => panic!("Unhandled: {:?}", exp.as_rule()),
+                    }
+                },
+                Rule::label => {
+                    let name = exp.into_inner()
+                                .next()
+                                .ok_or(WMError::GeneralError{ message: "None".to_owned() })?
+                                .as_str()
+                                .to_owned();
+
+                    WMStmt::Label(name)
+                },
+                _ => {
+                    panic!("investigate");
+                },
+            };
+
+            statements.push(stmt);
+        }
+
+        /*
+        let statements = vec![
+            WMStmt::Write(WriteOp::Set),
+            WMStmt::Label("top".to_owned()),
+            WMStmt::Seek(SeekOp::Right(1)),
+            WMStmt::Write(WriteOp::Set),
+            WMStmt::Jmp(Target::Name("top".to_owned()), Target::NextAddress)
+        ];
+        */
+
+        /*
+        top:
+        , // bf but reads just a bit
+        . // bf but writes just a bit
+        jmp top, top // like if {} else {}, so unconditional jmp
+        */
+        /*
+        let statements = vec![
+            WMStmt::Label("top".to_owned()),
+            WMStmt::Io(IoOp::In),
+            WMStmt::Io(IoOp::Out),
+            //WMStmt::Jmp(Target::NextAddress, Target::Name("top".to_owned()))
+            WMStmt::Jmp(Target::Name("top".to_owned()), Target::Name("top".to_owned()))
+        ];
+        */
+
+        // make jmp table
+        let mut jmp_table: LabelMap = HashMap::new();
+        let mut offset: InsnOffset = 0;
+        for stmt in statements.iter() {
+            if let WMStmt::Label(label_id) = stmt {
+                if jmp_table.contains_key(label_id) {
+                    Err(WMError::DuplicateLabel{ label: label_id.to_owned() })?
+                }
+
+                jmp_table.insert(label_id.to_owned(), offset);
+            } else {
+                offset += 1;
+            }
+        }
+
+        // make instructions
+        // we should probably rethink this and devise a way to lean on the type system instead of encoding the ordering implicitly in the vector
+        let mut insns: Vec<Insn> = Vec::new();
+        let mut next: InsnOffset = 1;
+        for stmt in statements.iter() {
+            if let WMStmt::Label(_) = stmt {
+                continue;
+            }
+
+            let insn = match stmt {
+                WMStmt::Write(value) => {
+                    Insn::Write(value.to_owned())
+                },
+                WMStmt::Seek(direction) => {
+                    Insn::Seek(direction.to_owned())
+                },
+                WMStmt::Io(rw) => {
+                    Insn::Io(rw.to_owned())
+                },
+                WMStmt::Jmp(branch_t, branch_f) => {
+                    let target_address = |branch: &Target| match branch {
+                        Target::NextAddress     => Some(&next),
+                        Target::Name(label_id)  => jmp_table.get(label_id),
+                    };
+
+                    // missing label error
+                    let t = target_address(branch_t).ok_or(WMError::UnknownTarget {
+                        target: branch_t.to_owned(),
+                    })?;
+                    let f = target_address(branch_f).ok_or(WMError::UnknownTarget {
+                        target: branch_f.to_owned(),
+                    })?;
+
+                    Insn::Jmp(*t, *f)
+                },
+
+                _ => {
+                    panic!("Shouldn't reach this");
+                },
+            };
+
+            insns.push(insn);
+            next += 1;
+        }
+
+        Ok(WMProgram{
+            instructions: insns,
+            labels: jmp_table,
+        })
+    }
+}
+
+
+// rule!(x -> a b c)
+// for now just pure rules
+macro_rules! rule {
+    ($symbol:ident -> $($app:expr)*) => {{
+        let mut app_vec = Vec::new();
+        $(
+            app_vec.push($app.to_owned());
+        )*
+        let appendant = Appendant::Pure(app_vec);
+
+        ($symbol, appendant)
+    }};
+}
+
+impl WMProgram {
+    pub fn from_file(filename: &Path) -> Result<WMProgram, WMError> {
+        let mut unparsed_file = String::new();
+        File::open(filename)?.read_to_string(&mut unparsed_file)?;
+
+        WMProgram::from_str(&unparsed_file)
+    }
+
+    fn mk_write(pos: InsnOffset, op: &WriteOp) -> Vec<TagRule> {
+        let mut rules = Vec::new();
+
+        // x_i -> x_j x_j
+        let x_start = forge_symbol(pos, "x");
+        let x = forge_symbol(pos + 1, "x");
+        rules.push(rule!(x_start -> x x));
+
+        // y_i -> y_j y_j
+        let y_start = forge_symbol(pos, "y");
+        let y = forge_symbol(pos + 1, "y");
+        rules.push(rule!(y_start -> y y));
+
+
+        let s1_start = forge_symbol(pos, "s1");
+        let s1_next = forge_symbol(pos + 1, "s1");
+
+        let s0_start = forge_symbol(pos, "s0");
+        let s0_next = forge_symbol(pos + 1, "s0");
+
+        match op {
+            // s0_i -> s1_j s1_j
+            // s1_i -> s1_j s1_j
+            WriteOp::Set    => {
+                rules.push(rule!(s0_start -> s1_next s1_next));
+                rules.push(rule!(s1_start -> s1_next s1_next));
+            },
+            // s0_i -> s0_j s0_j
+            // s1_i -> s0_j s0_j
+            WriteOp::Unset  => {
+                rules.push(rule!(s0_start -> s0_next s0_next));
+                rules.push(rule!(s1_start -> s0_next s0_next));
+            },
+        };
+
+        rules
+    }
+
+    fn mk_seek(pos: InsnOffset, direction: &SeekOp) -> Vec<TagRule> {
+        let mut rules = Vec::new();
+
+        let blank = forge_symbol(pos, "_");
+
+        let x = forge_symbol(pos, "x");
+        let x_next = forge_symbol(pos + 1, "x");
+        let xa = forge_symbol(pos, "xa");
+        let xb = forge_symbol(pos, "xb");
+        let xc = forge_symbol(pos, "xc");
+
+        let s0 = forge_symbol(pos, "s0");
+        let s1 = forge_symbol(pos, "s1");
+        let net = forge_symbol(pos, "net");
+        let test = forge_symbol(pos, "test");
+        let s0b = forge_symbol(pos, "s0b");
+        let s1b = forge_symbol(pos, "s1b");
+        let even_net = forge_symbol(pos, "even_net");
+        let odd_net = forge_symbol(pos, "odd_net");
+        let pad = forge_symbol(pos, "pad");
+        let s0c = forge_symbol(pos, "s0c");
+        let s1c = forge_symbol(pos, "s1c");
+        let s0_next = forge_symbol(pos + 1, "s0");
+        let s1_next = forge_symbol(pos + 1, "s1");
+
+        let y = forge_symbol(pos, "y");
+        let ya = forge_symbol(pos, "ya");
+        let yb = forge_symbol(pos, "yb");
+        let yc = forge_symbol(pos, "yc");
+        let y_next = forge_symbol(pos + 1, "y");
+
+
+        match direction {
+            SeekOp::Right(_)    => {
+                //
+                // (1)
+                //
+
+                // x_i -> xa xa xa xa
+                // Double the xs
+                rules.push(rule!(x -> xa xa xa xa));
+
+                // s0_i -> net _ test
+                rules.push(rule!(s0 -> net blank test));
+                // s1_i -> xa xa net _ test
+                rules.push(rule!(s1 -> xa xa net blank test));
+
+                // y_i -> ya
+                // Divide by 2 to obtain the unary representation of the ys
+                rules.push(rule!(y -> ya));
+
+
+                //
+                // (2)
+                //
+
+                // xa -> xb xb
+                // Maintain the status quo so we can do a parity check
+                rules.push(rule!(xa -> xb xb));
+
+                // net -> odd_net even_net
+                // Cast the net! This let's us safely operate even if there are no xs or ys
+                rules.push(rule!(net -> odd_net even_net));
+                // test -> s1b s0b
+                // This senses the parity of the ys. If they're odd, then the new head has a 1,
+                // if it is even then it gets a 0.
+                rules.push(rule!(test -> s1b s0b));
+
+
+                // ya -> yb yb
+                rules.push(rule!(ya -> yb yb));
+
+
+                //
+                // (3)
+                //
+
+                // xb -> xc xc
+                rules.push(rule!(xb -> xc xc));
+
+                // s0b -> s0c s0c
+                // Looks like it was even
+                rules.push(rule!(s0b -> s0c s0c));
+                // s1b -> s1c s1c
+                // Turns out we had an odd amount of ys
+                rules.push(rule!(s1b -> s1c s1c));
+                // odd_net ->
+                // Print out the intermediate queue, trust me. Keep the odd parity going.
+                rules.push(rule!(odd_net -> ));
+                // even_net -> pad
+                // Print out the intermediate queue, trust me. Balance the parity.
+                rules.push(rule!(even_net -> pad));
+
+                // yb -> yc yc
+                rules.push(rule!(yb -> yc yc));
+
+
+                //
+                // (4)
+                //
+
+                // xc -> x_j x_j
+                rules.push(rule!(xc -> x_next x_next));
+
+                // s0c -> s0_j s0_j
+                rules.push(rule!(s0c -> s0_next s0_next));
+                // s1c -> s1_j s1_j
+                rules.push(rule!(s1c -> s1_next s1_next));
+
+                // yc -> y_j y_j
+                rules.push(rule!(yc -> y_next y_next));
+            },
+            SeekOp::Left(_)     => {
+                // SeekOp::Right was done first so the comments there will be better. This is
+                // the same exact idea only mirrored.
+
+                //
+                // (1)
+                //
+
+                // x_i -> xa xa
+                // Maintain the status quo
+                rules.push(rule!(x -> xa xa));
+
+                // s0_i -> net _ test
+                rules.push(rule!(s0 -> net blank test));
+                // s1_i -> net _ test ya ya
+                rules.push(rule!(s1 -> net blank test ya ya));
+
+                // y_i -> ya ya ya ya
+                // Double
+                rules.push(rule!(y -> ya ya ya ya));
+
+
+                //
+                // (2)
+                //
+
+                // xa -> xb
+                // Halve
+                rules.push(rule!(xa -> xb));
+
+                // net -> odd_net even_net
+                // Cast the net so we can operate even with no xs or ys.
+                rules.push(rule!(net -> odd_net even_net));
+                // test -> s1b s0b
+                rules.push(rule!(test -> s1b s0b));
+
+                // ya -> yb yb
+                rules.push(rule!(ya -> yb yb));
+
+
+                //
+                // (3)
+                //
+
+                // xb -> xc xc
+                rules.push(rule!(xb -> xc xc));
+
+                // s0b -> s0c s0c
+                rules.push(rule!(s0b -> s0c s0c));
+                // s1b -> s1c s1c
+                rules.push(rule!(s1b -> s1c s1c));
+                // odd_net ->
+                rules.push(rule!(odd_net -> ));
+                // even_net -> pad
+                rules.push(rule!(even_net -> pad));
+
+                // yb -> yc yc
+                rules.push(rule!(yb -> yc yc));
+
+
+                //
+                // (4)
+                //
+
+                // xc -> x_j x_j
+                rules.push(rule!(xc -> x_next x_next));
+
+                // s0c -> s0_j s0_j
+                rules.push(rule!(s0c -> s0_next s0_next));
+                // s1c -> s1_j s1_j
+                rules.push(rule!(s1c -> s1_next s1_next));
+
+                // yc -> y_j y_j
+                rules.push(rule!(yc -> y_next y_next));
+            },
+        };
+
+        rules
+    }
+
+    fn mk_io(pos: InsnOffset, rw: &IoOp) -> Vec<TagRule> {
+        let mut rules = Vec::new();
+
+        // x_i -> x_j x_j
+        let x = forge_symbol(pos, "x");
+        let x_next = forge_symbol(pos + 1, "x");
+        rules.push(rule!(x -> x_next x_next));
+
+        // y_i -> y_j y_j
+        let y = forge_symbol(pos, "y");
+        let y_next = forge_symbol(pos + 1, "y");
+        rules.push(rule!(y -> y_next y_next));
+
+
+        let s1 = forge_symbol(pos, "s1");
+        let s1_next = forge_symbol(pos + 1, "s1");
+
+        let s0 = forge_symbol(pos, "s0");
+        let s0_next = forge_symbol(pos + 1, "s0");
+
+        match rw {
+            IoOp::In    => {
+                let appendant = AppendantBuilder::input_rule()
+                                .with_false_appendant(vec![s0_next.to_owned(), s0_next.to_owned()])
+                                .with_true_appendant(vec![s1_next.to_owned(), s1_next.to_owned()])
+                                .finalize();
+                // s0_i -> { s0_j s0_j ; s1_j s1_j }
+                rules.push((s0, appendant.to_owned()));
+                // s1_i -> { s0_j s0_j ; s1_j s1_j }
+                rules.push((s1, appendant.to_owned()));
+            },
+            IoOp::Out   => {
+                // s0_i -> 0: s0_j s0_j
+                let appendant = AppendantBuilder::output_rule()
+                                .with_output(false)
+                                .with_appendant(vec![s0_next.to_owned(), s0_next.to_owned()])
+                                .finalize();
+                rules.push((s0, appendant));
+
+                // s1_i -> 1: s1_j s1_j
+                let appendant = AppendantBuilder::output_rule()
+                                .with_output(true)
+                                .with_appendant(vec![s1_next.to_owned(), s1_next.to_owned()])
+                                .finalize();
+                rules.push((s1, appendant));
+            },
+        };
+
+        rules
+    }
+
+    fn mk_jmp(pos: InsnOffset, br_t: &InsnOffset, br_f: &InsnOffset) -> Vec<TagRule> {
+        let mut rules = Vec::new();
+
+        let x = forge_symbol(pos, "x");
+        let xa = forge_symbol(pos, "xa");
+        let xb_t = forge_symbol(pos, "xb_t");
+        let xb_f = forge_symbol(pos, "xb_f");
+        let x_t = forge_symbol(*br_t, "x");
+        let x_f = forge_symbol(*br_f, "x");
+
+        let s0 = forge_symbol(pos, "s0");
+        let s1 = forge_symbol(pos, "s1");
+        let net = forge_symbol(pos, "net");
+        let blank = forge_symbol(pos, "_");
+        let shift = forge_symbol(pos, "shift");
+        let s1a_t = forge_symbol(pos, "s1a_t");
+        let s0b_f = forge_symbol(pos, "s0b_f");
+        let s1b_t = forge_symbol(pos, "s1b_t");
+        let s0_f = forge_symbol(*br_f, "s0");
+        let s1_t = forge_symbol(*br_t, "s1");
+
+        let y = forge_symbol(pos, "y");
+        let ya_t = forge_symbol(pos, "ya_t");
+        let ya_f = forge_symbol(pos, "ya_f");
+        let yb_t = forge_symbol(pos, "yb_t");
+        let yb_f = forge_symbol(pos, "yb_f");
+        let y_t = forge_symbol(*br_t, "y");
+        let y_f = forge_symbol(*br_f, "y");
+
+        //
+        // (1)
+        //
+
+        // x_i -> xa xa
+        // Since the xs appear before the head (s*), we maintain the status quo for a cycle so
+        // that we can be impacted by the parity flip.
+        rules.push(rule!(x -> xa xa));
+
+        rules.push(rule!(s0 -> net blank shift));
+        rules.push(rule!(s1 -> s1a_t s1a_t));
+
+        rules.push(rule!(y -> ya_t ya_f));
+
+
+        //
+        // (2)
+        //
+
+        // Ok, now we can participate in the parity flip.
+        rules.push(rule!(xa -> xb_t xb_f));
+
+        rules.push(rule!(s1a_t -> s1b_t s1b_t));
+        rules.push(rule!(ya_t -> yb_t yb_t));
+
+
+        rules.push(rule!(net -> blank));
+        rules.push(rule!(shift -> s0b_f s0b_f));
+        rules.push(rule!(ya_f -> yb_f yb_f));
+
+
+        //
+        // (3)
+        //
+
+        rules.push(rule!(xb_t -> x_t x_t));
+        rules.push(rule!(s1b_t -> s1_t s1_t));
+        rules.push(rule!(yb_t -> y_t y_t));
+
+        rules.push(rule!(xb_f -> x_f x_f));
+        rules.push(rule!(s0b_f -> s0_f s0_f));
+        rules.push(rule!(yb_f -> y_f y_f));
+
+        rules
+    }
+
+    // XXX should also return some debug symbols (jmp_table?)
+    pub fn compile(&self) -> Result<TagProgram, WMError> {
+        let mut rules: TagRules = HashMap::new();
+
+        for (i, insn) in self.instructions.iter().enumerate() {
+            let translated = match insn {
+                Insn::Write(value) => {
+                    Self::mk_write(i, &value)
+                },
+                Insn::Seek(direction) => {
+                    Self::mk_seek(i, &direction)
+                },
+                Insn::Io(rw) => {
+                    Self::mk_io(i, &rw)
+                },
+                Insn::Jmp(branch_t, branch_f) => {
+                    Self::mk_jmp(i, &branch_t, &branch_f)
+                },
+            };
+
+            for (start_symbol, appendant) in translated {
+                rules.insert(start_symbol, appendant);
+            }
+        }
+
+        Ok(TagProgram{
+            deletion_number: 2,
+            rules: rules,
+            // XXX start start? This can then generate .data
+            //queue: Vec::new(),
+            queue: vec!["s0_0".to_owned(), "s0_0".to_owned()],
+            })
+    }
+}
+
+fn main() -> Result<(), WMError> {
+    //let program = WMProgram::from_file(Path::new("/tmp/in.wm"))?;
+    let program = WMProgram::from_file(Path::new("cat.wm"))?;
+    let tag = program.compile()?;
+    println!("{}", tag);
+
+    Ok(())
+}

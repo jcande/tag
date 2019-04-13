@@ -1,0 +1,137 @@
+representation:
+(x_i x_i)^m s_i s_i (y_i y_i)^n
+
+commands:
++
+    x_i -> x_i+1 x_i+1
+    s0_i -> s1_i+1
+    s1_i -> s1_i+1
+    y_i -> y_i+1 y_i+1
+
+-
+    x_i -> x_i+1 x_i+1
+    s0_i -> s0_i+1
+    s1_i -> s0_i+1
+    y_i -> y_i+1 y_i+1
+
+>
+    (1)
+    x_i -> x_ai x_ai xp_ai
+
+    s0_i -> s0_ai s0_ai
+    s1_i -> s1_ai s1_ai
+
+    y_i -> y_ai y_ai
+
+    (2)
+    x_ai -> x_bi x_bi x_bi
+    xp_ai -> x_bi x_bi
+
+    (3)
+    s0_ai -> t_i
+    s1_ai -> x_bi x_bi t_i
+
+    y_ai -> y_bi
+
+    (4)
+    x_bi -> x_ci x_ci
+
+    (5)
+    t_i -> t_ai tp_ai
+    y_bi -> y_ci y_ci
+
+    (6)
+    x_ci -> x_i+1 x_i+1
+
+    (7)
+    t_ai -> s1_i+1 s1_i+1
+    tp_ai -> x_i+1 s0_i+1 s0_i+1
+
+    y_ci -> y_i+1 y_i+1
+
+<
+    (1)
+    x_i -> x_ai x_ai
+    x_ai -> x_bi x_bi
+
+    s0_i -> s0_ai s0_ai
+    s1_i -> s1_ai s1_ai
+
+    s0_ai -> s0_bi s0_bi
+    s1_ai -> s1_bi s1_bi
+
+    y_i -> y_ai y_ai yp_ai
+
+    (2)
+    x_bi -> x_ci x_ci
+
+    y_ai -> y_bi y_bi y_bi
+    yp_ai -> y_bi y_bi
+
+    (3)
+    x_ci -> x_di
+
+    s0_bi -> t_i
+    s1_bi -> t_i y_ci y_ci
+
+    y_bi -> y_ci y_ci
+
+    (4)
+    t_i -> t_1i t_2i
+
+    y_ci -> y_di y_di
+
+    (5)
+    x_di -> x_i+1 x_i+1
+
+    (6)
+    t_2i -> x_i+1 s0_i+1 s0_i+1
+
+    t_1i -> s1_i+1 s1_i+1
+
+    y_di -> y_i+1 y_i+1
+
+jmp n{, m}
+    (1)
+    x_i -> t_i t_i
+
+    s0_i -> s0p_i
+    s1_i -> s1p_i s1p_i
+
+    y_i -> u_i up_i
+
+    (2)
+    t_i -> xp_i xpp_i
+
+    (3)
+    s0p_i -> xp_i s0pp_i s0pp_i
+    s1p_i -> s1pp_i s1pp_i
+
+    u_i -> yp_i ypp_i
+    up_i -> ypp_i yp_i
+
+    (4)
+    xp_i -> x_n x_n
+    xpp_i -> x_m x_m
+
+    s0pp_i -> s0_m s0_m
+    s1pp_i -> s1_n s1_n
+
+    yp_i -> y_n y_n
+    ypp_i -> y_m y_m
+
+.
+    x_i -> x_i+1 x_i+1
+
+    s0_i -> 0: s0_i s0_i
+    s1_i -> 1: s1_i s1_i
+
+    y_i -> y_i+1 y_i+1
+
+,
+    x_i -> x_i+1 x_i+1
+
+    s0_i -> { s0_i+1 s0_i+1 ; s1_i+1 s1_i+1 }
+    s1_i -> { s0_i+1 s0_i+1 ; s1_i+1 s1_i+1 }
+
+    y_i -> y_i+1 y_i+1

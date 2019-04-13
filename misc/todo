@@ -1,0 +1,3 @@
+We can emit "debug" symbols when compiling the w-machine into the tag-system. We can mark certain symbols the correspond to the beginning of a new w-machine instruction and then check for them each step of emulator (perhaps by adding a field to TagRule to show the "source line").
+
+We can translate the assembled symbols (raw numbers) into their symbolic names by emitting the translator lookup table in the haskell source. Perhaps just save it as an ascii (0: "s0_0")-style file when we make the assembled object file.

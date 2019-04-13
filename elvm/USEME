@@ -1,0 +1,13 @@
+Now you have tools such as out/8cc and out/elc
+
+Use following targets to build/run tests for backend xxx:
+
+- `make build-xxx`: Compile all tests to xxx backend
+   (e.g., out/lisp.c.eir.xxx will be built from test/lisp.c)
+- `make test-xxx` or `make xxx`: Run tests for xxx backend
+   (e.g., out/lisp.c.eir.xxx.out.diff will be output)
+- `make test-xxx-full`: Run target/xxx.c on ELVM
+   (this checks if the target xxx can self-host)
+- `make test`: Build and run all tests
+   (WARNING: will take a lot of time/disk)
+

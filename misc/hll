@@ -1,0 +1,78 @@
+High-Level Language
+--
+
+// ideas: https://github.com/arthaud/c2bf/blob/master/src/c2bf.ml
+// to implement arrays: http://www.inshame.com/2008/02/efficient-brainfuck-tables.html
+// { temp = 0 ; write_to_index ; read_from_index ; data ; array[size] }
+// This shit basically copies the tuple:
+//    (temp, write_to_index, read_from_index, data)
+// up through the array until we are at the proper offset, then moves
+// back down once we access the proper element.
+/*
+we start out pointing to temp (which also must be zero)
+
+> shift to write_to_index
+[
+    >>> shift to base of array (next boundary)
+        [- decrement base (element 0)
+            <<<<+ increment temp
+            >>>>
+        ] move array[0] to temp
+
+    < shift to data
+	[->+<] move data to array[0]
+
+	< shift to read_from_index
+    [->+<] move read_from_index to data
+
+	< shift to write_to_index
+    [->+<] move write_to_index to read_from_index
+
+    shift to read_from_index (which contains write_to_index)
+	>-
+
+    summarizing:
+    for (;;) {
+        temp = array[0]
+        array[0] = data
+        data = r
+        r = w
+        r = r-1
+        if (r == 0) break;
+    }
+]
+
+write:
+>[>>>[-<<<<+>>>>]<[->+<]<[->+<]<[->+<]>-]
+>>>[-]<[->+<]<
+[[-<+>]<<<[->>>>+<<<<]>>-]<<
+
+read:
+>[>>>[-<<<<+>>>>]<<[->+<]<[->+<]>-]
+>>>[-<+<<+>>>]<<<[->>>+<<<]>
+[[-<+>]>[-<+>]<<<<[->>>>+<<<<]>>-]<<
+
+*/
+
+fn main
+{
+    var whatever; // 8-bit variables only
+    var condition;
+
+    whatever = 2 + 8;    // addition/subtraction only (of 8-bits)
+    // we should have arrays too but that might be tricky to implement
+
+    // bitwise operators and comparison operators
+    condition = ((whatever & 3) == 0);
+    if (condition)
+    {
+        jmp label;
+    }
+    else
+    {
+        jmp other_label;
+    }
+}
+
+
+--

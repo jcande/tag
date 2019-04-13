@@ -1,0 +1,12 @@
+[package]
+name = "wmach"
+version = "0.0.1"
+authors = ["Jared S. Candelaria <jsc+tag@demigods.org>"]
+
+[dependencies]
+pest = "1.0"
+pest_derive = "1.0"
+nom = "^4.1"
+failure = "0.1.2"
+failure_derive = "0.1.2"
+tag = { path = "../tag" }

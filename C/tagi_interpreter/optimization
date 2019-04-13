@@ -1,0 +1,33 @@
+cases:
+
+// translation
+x_0 -> x_1 x_1 
+
+// expansion (*2)
+x_0 -> x_1 x_1 x_1 x_1
+
+// contraction (/2)
+x_0 -> x_1
+
+
+complications:
+ - pushed symbols is not a multiple of deletion_number
+
+
+ideal flow:
+- fill up current cache (we can now operate as if we had a blank cache)
+- find a cycle in the appendant (given the potentially shifted appendant due to filling up the cache)
+- if the cycle is "cacheable" (results in the same symbol, so we can stack it with SymbolCount) then perform some arithmetic. We no longer need to iterate over each symbol!
+-  merge this tmp cache with the real one
+- otherwise, fallback to the current (slow) implementation
+
+initial
+[x x][x x][x x]...[x x]
+
+fill up
+x][x x][x x]...[x
+
+cycle found: [x _]
+arithmetic: [x _]^n
+
+handle dregs: [x

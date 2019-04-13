@@ -1,0 +1,101 @@
+The flow is: C => front-end => .eir, .eir => elc target-specific back-end => output.`targetlang`
+
+This means that your backend will deal with the very simple .eir and translate that into your esoteric language. Your problem space now reduces to how to translate a brainfuck-like system. Looking at target/c.c is good as this is basically hello-world.
+Ops:
+MOV = 0, ADD, SUB, LOAD, STORE, PUTC, GETC, EXIT,
+conditional jumps,
+conditionals
+
+Also, remember that this describes a harvard architecture. The pointers for loads and stores refer exclusively to the DATA, whereas pc refers to the program TEXT.
+
+Add your target's source file to Makefile:ELC_SRCS. Then update elc.c:get_target_func to call into target_`your_target_name_here` in your `target`.c .  You now have a Module (defined in ir.h), which consists of a list of Inst s (also defined in ir.h) and Data (see ir.h). Inst is as it sounds and describes a simple instruction (opcode, and some other helpful details), while Data contains the numeric value/ordinal for a related symbol (if one exists) and is basically a quick way to refer to a label or constant data.
+XXX Also need to add the target to the makefile, e.g.,
+TARGET := `target`
+RUNNER := tools/run`target`.sh
+TOOL := `target_tool`
+include target.mk
+$(OUT.eir.`target_tool`.out): tools/run`target`.sh
+
+Run your back-end via ./elc -`target` `input_file.eir`
+
+
+
+We want to implement:
+ +   Mark (set) the square (bit) under the head
+ -   Erase (clear) the square (bit) under the head
+ >   Move the head to the right by one square (bit)
+ <   Move the head to the left by one square (bit)
+ jmp n{, m}   Branch to the n'th instruction if the square (bit) under the head
+              is marked, otherwise branch to the m'th (which defaults to the
+              next instruction).
+ .   Output the square under the head (0 or 1)
+ ,   Receive a single bit to the square under the head
+
+
+Example program
+--
+.text
+mov B, val
+load A, B
+putc A
+add B, 1
+load A, B
+putc A
+exit
+
+.data
+val:
+.string "hi"
+
+...becomes...
+
+d0: 0x68
+d1: 0x69
+d2: 0
+d3: 4
+i0: jmp 1 pc=0 @16777215
+i1: mov B 0 pc=1 @2 # note 0 corresponds to d0
+i2: load A B pc=1 @3
+i3: putc A pc=1 @4
+i4: add B 1 pc=1 @5
+i5: load A B pc=1 @6
+i6: putc A pc=1 @7
+i7: exit pc=1 @8
+
+...becomes...
+
+/* example here, need to contemplate .data more */
+/* where is sp? Guessing .data and runtime data (stack) are in the same place
+ * but not sure how it is generally split up. */
+
+===
+TODO - instructions (https://github.com/shinh/elvm/blob/master/ELVM.md)
+===
+
+ * Words are unsigned integers. The word-size is backend dependent, but most
+   backends use 24-bit words.
+ * 6 registers: A, B, C, D, SP, and BP. They are one word wide and initialized
+   to zero.
+ * Memory addresses are one word wide. The beginning of memory is initialized
+   from the .data segments; the rest is initialized to zero.
+ * Instructions are not stored in memory. Every instruction in a basic block
+   has the same pc (program counter) value, and a branch to a pc goes to the
+   first instruction with that pc.
+
+==
+OPS
+==
+
+MOV dst, src
+--
+copy src to dst
+src: immediate OR register
+dst: register
+
+
+ADD dst, src
+--
+add src to dst and places result in dst
+src: immediate OR register
+dst: register
+no carry flag

@@ -1,0 +1,108 @@
+Universality of tag systems
+--
+A : finite alphabet of a_1, ..., a_n
+W : set of words and forall i, W_i = <fixed string>, where each word in <fixed string> is in A (these are the productions)
+S : input string
+P : deletion count (e.g., the "2" in 2-tag system)
+
+Q : the states Q_1, ..., Q_i, ..., Q_r of the (emulated) turing machine
+The following symbols are used in the emulator (tag system):
+    x_i
+    A_i - finite alphabet
+    alpha_i - symbol under read head
+    B_i
+    beta_i
+
+    e.g., A_i x_i (alpha_i x_i)^M B_i x_i (beta_i x_i)^N : represents the instantaneous description (Q_i, M, N) of the turing machine
+    (where is Q_i???)
+
+    C_i
+    c_i
+    D_i0
+    d_i0
+    D_i1
+    d_i1
+    S_i
+    s_i
+    T_i0
+    t_i0
+    T_i1
+    t_i1
+for (i = 1...r), where i corresponds to the internal state of the machine (turing or tag?, likely turing)
+
+
+tag words:
+A -> Cx
+A -> Cxcx
+alpha -> cxcx
+
+The key idea:
+The productions are equivalent to machine code. Each INSTRUCTION corresponds to
+a "set" of productions. The productions are keyed off (think of a prefix) the
+turing machine state. The contents of the queue are ALSO keyed off that state.
+In this way, we can manipulate the queue with productions specific to that
+state. This is what enables us to emulate a turing machine. We slowly twiddle
+the tag state until we eventually flip over to using a new set of rules. This
+flip corresponds directly to a state transition in the emulated turing machine.
+
+An interesting side-effect of this is that the symbols on the tape must align
+with the current "instruction" productions. In other words, we must match the
+tape symbols (symbols corresponding to the current execution state) with the
+desired execution state. In even yet other words, the symbolsl used on both the
+tape and the productions must align with the current execution state of the
+emulated turing machine. This means that lots of our transitionary states
+(intermediate tag system states that do not correspond to any turing machine
+state) are spent converting symbols to the next turing machine state's
+representation.
+
+
+---
+
+x, y are purely represented by their exponent.
+I.e., in (x_i x_i)^m s_i s_i (y_i y_i)^n, x and y purely symbolic with only
+s_i having a 0, or 1 value.
+
+
+---
+
+How do deal with IO?
+
+Let's say we define "," to read in a single bit (0 or 1). How might we
+implement this modified w-machine? One way to look at the problem is to
+remember that our tag machine emulates the w-machine by representing it as x^n
+s y^m. In this way, we are really trying to modify s. Since s can be either 0
+or 1, it will be represented with two rules s0 and s1. Our problem of input
+boils down to choosing the proper appendent for s0 and s1. This appendent will
+correspond, of course, to the input bit. One implementation can tag these input
+states so that when we encounter them we perform the IO on their behalf. Once
+the input bit is obtained, we can lookup the corresponding successor state (say
+s0' and s1', look at the definitions of + and - to see exactly how we might set
+the head's value) and append that. From inside the tag machine (and thus the
+w-machine), it looks like that bit was always there.
+
+To summarize, we mark EACH rule that relates to IO. These rules should have NO
+appendents (so appear at first like halting states). We then supply two
+appendents corresponding to each possible input bit (0 or 1). The w-machine
+state involves translating the x's, the s's, and the y's but as far as IO is
+concerned, only the s's matter. In this way, our IO trick will resemble both +
+and -. We can actually think of it as BEING both + and - but chosen at runtime
+depending on the input bit. The compiler will need to track the tag state (the
+n in s0_n/s1_n) so that it can emit a mapping for the lower levels.
+
+Output is much simpler. We can simply mark a particular symbol as being an
+output for a particular bit and then write that bit whenever the symbol is
+encountered.
+
+w-machine
+--
+>,.
+
+tag machine
+--
+x_0 -> x_1
+y_0 -> y_1
+/* ... */
+I: s_1 -> { case0_1, case1_1 } /* 0 case is always first */
+/* ... */
+O0: s0_2 -> s0_3    /* Output 0 bit */
+O1: s1_2 -> s1_3    /* Output 1 bit */

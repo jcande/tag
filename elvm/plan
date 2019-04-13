@@ -1,0 +1,18 @@
+jmp 1 =>
+    jmp one, one
+
+mov B 0 =>
+    one:
+    seek(@B) /* <<<<< etc */
+    ->
+    ... /* whatever the size of the registers is */
+    ->
+    /* B is now equal to 0 */
+
+load A @B =>
+    /* gotta use a trie or something, can't do this now */
+
+putc A =>
+    seek(@A)
+    .> /* register size */ .>
+

@@ -1,0 +1,51 @@
+alpha = _{ 'a'..'z' | 'A'..'Z' }
+digit = _{ '0'..'9' }
+misc = _{ "'" | "_" }
+leader = _{ alpha | "_" }
+
+whitespace = _{ " " }
+comment = _{ "/*" ~ (!"*/" ~ any)* ~ "*/" }
+newline = _{ "\n" }
+newlines = _{ newline* }
+newlines1 = _{ newline+ }
+
+//
+// Our symbols can look like s''0_8
+//
+id = { leader ~ (alpha | digit | misc)* }
+symbol = @{ id }
+
+number = @{ digit+ }
+deletion_number = {
+	"deletion_number" ~ newlines ~ "{" ~ newlines
+	~ number
+	~ newlines ~ "}" ~ newlines
+}
+
+bit = { "0" | "1" }
+start_symbol = @{ symbol }
+appendant = { symbol* }
+pure_rule   = { appendant }
+input_rule  = { "{" ~ appendant ~ ";" ~ appendant ~ "}" }
+output_rule = { bit ~ ":" ~ appendant }
+rule = { start_symbol ~ "->" ~ (input_rule | output_rule | pure_rule) }
+rules = {
+	"rules" ~ newlines ~ "{" ~ newlines
+	~ (rule ~ newlines1)*
+	~ newlines ~ "}" ~ newlines
+}
+
+queue_data = { (symbol ~ newlines)* }
+queue = {
+	"queue" ~ newlines ~ "{" ~ newlines
+	~ queue_data
+	~ newlines ~ "}" ~ newlines
+}
+
+system = {
+	soi
+	~ deletion_number
+	~ rules
+	~ queue
+	~ eoi
+}
